@@ -1,0 +1,30 @@
+# Temporary pipeline data
+new_articles.json
+new_articles.txt
+
+# Python temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Flutter/Dart build and tool directories
+.dart_tool/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# IDE specific files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+Thumbs.db
+desktop.ini
+.DS_Store

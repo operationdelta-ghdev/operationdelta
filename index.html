@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingress Event Tracker // Scanner Console</title>
+  
+  <!-- SEO Best Practices -->
+  <meta name="description" content="Monitor active and scheduled Ingress events, gameplay adjustments, portal anomalies, and timezone conversions in real-time.">
+  <meta name="keywords" content="Ingress, Ingress Prime, Ingress Events, XM anomalies, Nigel Moyer, Ingress News">
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body class="scanner-theme">
+  <!-- Cyber Grid Background Decoration -->
+  <div class="grid-overlay"></div>
+  <div class="scanline"></div>
+
+  <div class="container">
+    <!-- Scanner Console Header -->
+    <header class="console-header">
+      <div class="logo-area">
+        <div class="xm-node" id="status-node"></div>
+        <h1 class="scanner-title">INGRESS // EVENT_CONDUIT</h1>
+      </div>
+      <div class="status-panel">
+        <span class="status-item"><span class="label">STATUS:</span> <span class="val pulse" id="status-text">ONLINE</span></span>
+        <span class="status-item"><span class="label">DATABASE:</span> <span class="val" id="db-count">0 EVENTS</span></span>
+        <span class="status-item"><span class="label">SECURE_LINK:</span> <span class="val green">ESTABLISHED</span></span>
+      </div>
+    </header>
+
+    <!-- Main Controller Navigation / Filters -->
+    <nav class="console-filters" aria-label="Event filter menu">
+      <button class="filter-btn active" id="filter-all" data-filter="all">
+        <span class="btn-glow"></span>
+        <span class="btn-text">ALL_UNITS</span>
+      </button>
+      <button class="filter-btn" id="filter-active" data-filter="active">
+        <span class="btn-glow"></span>
+        <span class="btn-text">ACTIVE_NOW</span>
+      </button>
+      <button class="filter-btn" id="filter-upcoming" data-filter="upcoming">
+        <span class="btn-glow"></span>
+        <span class="btn-text">SCHEDULED</span>
+      </button>
+      <button class="filter-btn" id="filter-past" data-filter="past">
+        <span class="btn-glow"></span>
+        <span class="btn-text">ARCHIVED</span>
+      </button>
+    </nav>
+
+    <!-- Scanner Content / Event Cards Grid -->
+    <main class="console-content" id="events-grid" aria-live="polite">
+      <!-- Loader Spinner -->
+      <div class="loader-container" id="loader">
+        <div class="loader-orbit">
+          <div class="loader-planet"></div>
+        </div>
+        <p class="loader-text">SYNCHRONIZING WITH PORTAL NETWORK...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state hidden" id="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+        </svg>
+        <p class="empty-text">NO ANOMALIES DETECTED IN THIS VECTOR.</p>
+      </div>
+    </main>
+
+    <!-- Scanner Console Footer -->
+    <footer class="console-footer">
+      <div class="footer-left">
+        <span>© 2026 INGRESS EVENT Tracker. DESIGNED FOR XM FIELD AGENTS.</span>
+      </div>
+      <div class="footer-right">
+        <span>DEVICE_LOCAL: <span id="current-timezone-display">UTC</span></span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Main Controller Script -->
+  <script src="app.js"></script>
+</body>
+</html>

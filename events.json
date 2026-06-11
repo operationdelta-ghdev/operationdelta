@@ -1,0 +1,308 @@
+[
+  {
+    "id": "2026-fathersday",
+    "title": "The Father is the Enigma: The Legacy of Nigel Moyer",
+    "url": "https://ingress.com/news/2026-fathersday",
+    "published_at": 1780605060000,
+    "events": [
+      {
+        "name": "Nigel Moyer - Father's Day 2026",
+        "start_time": "2026-06-12T18:00:00Z",
+        "end_time": "2026-06-22T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Portal Keys are guaranteed to drop from all successful hacks.",
+          "The 'Nigel Moyer - Father's Day 2026' Premium Campaign is available for 15,000 CMU (rewards: special medal and tactical gear).",
+          "Re-release of the 'Archives: Susanna Moyer (2015)' medal as a standalone offering for a limited time.",
+          "Susanna Moyer physical merchandise available at the Ingress Store."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-summer",
+    "title": "Operation Summer Solstice 2026",
+    "url": "https://ingress.com/news/2026-summer",
+    "published_at": 1779827400000,
+    "events": [
+      {
+        "name": "Operation Summer Solstice 2026",
+        "start_time": "2026-06-05T18:00:00Z",
+        "end_time": "2026-06-29T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Standard Campaign track allows earning Bronze and Silver tiers of the 'Summer Solstice 2026' medal and up to 3,000 Orion Tokens.",
+          "Premium 'Dark Star 2026' Campaign available for 15,000 CMU (rewards: exclusive medal).",
+          "XM substrate stability allows running 10 concurrent Kinetic Programs."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-hankcourierfiles",
+    "title": "The Courier Files",
+    "url": "https://ingress.com/news/2026-hankcourierfiles",
+    "published_at": 1778704200000,
+    "events": [
+      {
+        "name": "The Courier Files Campaign",
+        "start_time": "2026-05-22T18:00:00Z",
+        "end_time": "2026-06-02T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Free repeatable 'Hank Johnson: The Courier Files' Campaign available in the Scanner (repeatable up to 3 times).",
+          "Complete objectives to earn up to 3,000 Orion Tokens."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-nia-debrief",
+    "title": "May 16 Server Latency Debrief",
+    "url": "https://ingress.com/news/2026-nia-debrief",
+    "published_at": 1779431837250,
+    "events": [
+      {
+        "name": "Emergency XMP Attack Radius Tuning",
+        "start_time": "2026-05-26T17:00:00Z",
+        "end_time": "2026-06-01T17:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "XMP attack strength increased, but attack radius is temporarily reduced to prevent global write contention on database.",
+          "Fewer Portals are attacked per XMP fired during this window."
+        ]
+      },
+      {
+        "name": "Free Anomaly Compensatory Load Out Kit",
+        "start_time": "2026-05-22T17:00:00Z",
+        "end_time": "2026-05-29T17:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Free Load Out Kit in the Store containing: 1 Aegis Shield, 4 Rare Multi-Hack, 20 Power Cube, 20 XMP, 20 Resonator, 8 Rare Heat Sink, 1 ADA Refactor, 1 JARVIS Virus, 1 Kinetic Capsule, 4 Very Rare Shield, 8 Rare Shield, 1 SoftBank Ultra Link."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-mothersday",
+    "title": "The Mother is the Beacon: Honoring The Acolyte",
+    "url": "https://ingress.com/news/2026-mothersday",
+    "published_at": 1777955460000,
+    "events": [
+      {
+        "name": "Mother's Day Kinetic Capsule Boost",
+        "start_time": "2026-05-08T18:00:00Z",
+        "end_time": "2026-05-18T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Parallel processing limit for Kinetic Capsules increased from 7 to 13.",
+          "'The Acolyte - Mother's Day 2026' Premium Campaign is available for 15,000 CMU in the Store (rewards: special medal and XM items).",
+          "Exclusive The Acolyte physical merchandise available for a limited time at the Ingress Store."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-peridot-mobile-sunset",
+    "title": "Thank You For Adventuring With Us, Peridot Keepers",
+    "url": "https://ingress.com/news/2026-peridot-mobile-sunset",
+    "published_at": 1777051975678,
+    "events": [
+      {
+        "name": "Peridot Keeper Commemoration Campaign",
+        "start_time": "2026-06-01T18:00:00Z",
+        "end_time": "2026-07-01T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Free 'Peridot Keeper' Campaign and Limited Edition Peridot medal available to all Agents.",
+          "Bounties include: hacking, capturing portals, deploying mods, deploying resonators, walking 5km, and creating links/fields."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-nemesisredux",
+    "title": "Nemesis Challenge Redux",
+    "url": "https://ingress.com/news/2026-nemesisredux",
+    "published_at": 1776976200000,
+    "events": [
+      {
+        "name": "Nemesis Challenge Redux Campaigns",
+        "start_time": "2026-05-01T18:00:00Z",
+        "end_time": "2026-06-01T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Three concurrent Campaigns: Myriad (Free), Umbra (15,000 CMU), and Courier (15,000 CMU) to earn or upgrade respective medals to Gold tier.",
+          "Reduced Portal hack cooldown patterns globally.",
+          "Experimental tuning for XMP Bursters and Portal Shields deployed during the event window.",
+          "2X AP bonus on deploying a Resonator, destroying a Resonator, and capping the 8th Resonator slot.",
+          "Bonus AP for Unique Portal Visits.",
+          "Surge in Machina activity globally as signatures grow stronger."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-orion-globalop",
+    "title": "Orion Global Op",
+    "url": "https://ingress.com/news/2026-orion-globalop",
+    "published_at": 1776285000000,
+    "events": [
+      {
+        "name": "Orion Global Linking & Fielding Operation",
+        "start_time": "2026-04-24T18:00:00Z",
+        "end_time": "2026-05-11T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Earn Orion Global Op Points by creating/destroying links and fields (points credited in Dispatch interface).",
+          "Collaboration bonus: Create a Unique Field with 2 or 3 distinct owners to split 12 or 30 points.",
+          "Stage 1 Assignments reward the Orion Global Campaign Medal (Bronze, Silver, Gold) and up to 7,500 Orion Tokens.",
+          "Factions compete globally for 1,000 Season Points distributed pro-rata."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-sakura",
+    "title": "Sakura Blossom Festival 2026",
+    "url": "https://ingress.com/news/2026-sakura",
+    "published_at": 1775161860000,
+    "events": [
+      {
+        "name": "Sakura Blossom Festival 2026",
+        "start_time": "2026-04-07T18:00:00Z",
+        "end_time": "2026-04-30T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Global XM manifests as glowing, pink sakura petals drifting in the Scanner UI.",
+          "Free 'Sakura Blossom 2026' Campaign rewards the 'Sakura Blossom 2026' medal and 3,000 Orion Tokens.",
+          "Two advanced Campaigns ('Sakura Branch 2026' and 'Sakura Tree 2026') available for 15,000 CMU each in the store.",
+          "Redux Campaigns available to secure classic 2021 Sakura medals for 2,500 CMU each."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-aberration",
+    "title": "Investigation Alert: The Aberration",
+    "url": "https://ingress.com/news/2026-aberration",
+    "published_at": 1772573460000,
+    "events": [
+      {
+        "name": "The Aberration Investigation Campaign",
+        "start_time": "2026-03-06T18:00:00Z",
+        "end_time": "2026-04-06T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Primary Campaign 'The Aberration' unlocked for all Agents.",
+          "Player activity determines progression paths: fortifying unlocks 'Superposition' campaign; destroying unlocks 'Dissolution' campaign.",
+          "Completing all three paths unlocks the ultimate 'Equilibrium' campaign.",
+          "Earn up to 3,800 +Gamma Tokens to upgrade the season medal.",
+          "Optional Premium campaigns 'Good Cat 2026' and 'Bad Cat 2026' available for 30,000 CMU."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-toastday",
+    "title": "Ingress Toast Day 2026",
+    "url": "https://ingress.com/news/2026-toastday",
+    "published_at": 1771882260000,
+    "events": [
+      {
+        "name": "Ingress Toast Day 2026",
+        "start_time": "2026-02-26T18:00:00Z",
+        "end_time": "2026-03-09T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Temporary Kinetic Program lets you convert 8 L1 Resonators into 2 Toast Beacons.",
+          "Archival Premium Campaign 'Toast Day Redux 2026' available for 15,000 CMU (rewards the 2022 Toast Medal or a Recursion Wing).",
+          "Free repeatable 'Toast Day 2026' Campaign dishing out Toast Beacons.",
+          "Warmth in XM network bakes Toast Glyphs into scanner hacks."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-yearofthehorse",
+    "title": "Gallop into Greatness with Ingress Year of the Horse! 🐎",
+    "url": "https://ingress.com/news/2026-yearofthehorse",
+    "published_at": 1770672660000,
+    "events": [
+      {
+        "name": "Year of the Horse Celebration Campaign",
+        "start_time": "2026-02-13T17:00:00Z",
+        "end_time": "2026-02-27T17:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Year of the Horse Celebration Campaign available for 15,000 CMU via Dispatch.",
+          "Completing the first Assignment grants the exclusive 'Lunar New Year 2026' Year of the Horse medal."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2026-q3-md",
+    "title": "2026 Q3 Mission Days",
+    "url": "https://ingress.com/news/2026-q3-md",
+    "published_at": 1778646600000,
+    "events": []
+  },
+  {
+    "id": "2026-orion-results",
+    "title": "Orion Anomaly Season - Results",
+    "url": "https://ingress.com/news/2026-orion-results",
+    "published_at": 1776889860000,
+    "events": []
+  },
+  {
+    "id": "2026-orion-anomalysites",
+    "title": "Orion Anomaly Sites",
+    "url": "https://ingress.com/news/2026-orion-anomalysites",
+    "published_at": 1776112200000,
+    "events": []
+  },
+  {
+    "id": "2026-farmgresslaunch",
+    "title": "Update 040126: Ingress Goes Agricultural",
+    "url": "https://ingress.com/news/2026-farmgresslaunch",
+    "published_at": 1774980000000,
+    "events": []
+  },
+  {
+    "id": "2026-orion",
+    "title": "Orion Anomaly Season - Overview",
+    "url": "https://ingress.com/news/2026-orion",
+    "published_at": 1774643460000,
+    "events": []
+  },
+  {
+    "id": "2026-q2-events",
+    "title": "April - June 2026 Schedule",
+    "url": "https://ingress.com/news/2026-q2-events",
+    "published_at": 1774470660000,
+    "events": []
+  },
+  {
+    "id": "pausing-opr-retiring-overclock",
+    "title": "Pausing OPR and Retiring Overclock",
+    "url": "https://ingress.com/news/pausing-opr-retiring-overclock",
+    "published_at": 1773075520885,
+    "events": []
+  },
+  {
+    "id": "2026-q2-md",
+    "title": "2026 Q2 Mission Days",
+    "url": "https://ingress.com/news/2026-q2-md",
+    "published_at": 1771363860000,
+    "events": []
+  },
+  {
+    "id": "events",
+    "title": "Events Index",
+    "url": "https://ingress.com/news/events",
+    "published_at": 0,
+    "events": []
+  }
+]
+
