@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loader = document.getElementById('loader');
   const emptyState = document.getElementById('empty-state');
   const statusNode = document.getElementById('status-node');
-  const statusText = document.getElementById('status-text');
+  const lastUpdatedEl = document.getElementById('last-updated');
   const dbCountDisplay = document.getElementById('db-count');
   const tzDisplay = document.getElementById('current-timezone-display');
 
@@ -88,6 +88,23 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCalendar();
       updateStatusPanel();
 
+      // Display the datestamp of the latest parsed data
+      if (articles && articles.length > 0) {
+        let latestTimestamp = 0;
+        articles.forEach(art => {
+          if (art.published_at > latestTimestamp) {
+            latestTimestamp = art.published_at;
+          }
+        });
+        if (latestTimestamp > 0) {
+          const lastUpdatedDate = new Date(latestTimestamp);
+          const lastUpdatedStr = formatEventTime(lastUpdatedDate, 'global');
+          if (lastUpdatedEl) {
+            lastUpdatedEl.textContent = lastUpdatedStr;
+          }
+        }
+      }
+
       // Start Countdown Ticker
       if (!trackerInterval) {
         trackerInterval = setInterval(updateTrackers, 1000);
@@ -98,8 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Failed to load Ingress events data:', error);
       showLoader(false);
       showEmptyState(true);
-      statusText.textContent = 'ERROR';
-      statusText.style.color = '#ff2a6d';
+      if (lastUpdatedEl) {
+        lastUpdatedEl.textContent = 'LINK ERROR';
+        lastUpdatedEl.style.color = '#ff2a6d';
+      }
     }
   }
 
@@ -573,12 +592,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (activeCount > 0) {
       statusNode.className = 'xm-node anomaly';
-      statusText.textContent = 'ANOMALY DETECTED';
-      statusText.style.color = '#ff2a6d';
     } else {
       statusNode.className = 'xm-node';
-      statusText.textContent = 'MONITORING';
-      statusText.style.color = '#02ff77';
     }
   }
 

@@ -145,13 +145,14 @@ body.scanner-theme {
 /* Filters */
 .console-filters {
   display: flex;
+  justify-content: center;
   gap: 1rem;
   margin-bottom: 2.5rem;
 }
 
 .filter-btn {
-  background: rgba(13, 20, 30, 0.6);
-  border: 1px solid var(--color-border-default);
+  background-color: var(--color-border-default);
+  border: none;
   padding: 0.75rem 1.5rem;
   color: var(--color-text-secondary);
   font-family: var(--font-sci-fi);
@@ -159,6 +160,7 @@ body.scanner-theme {
   letter-spacing: 1px;
   cursor: pointer;
   position: relative;
+  isolation: isolate;
   transition: all 0.3s ease;
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
 }
@@ -166,31 +168,50 @@ body.scanner-theme {
 .filter-btn::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(0, 200, 255, 0.1) 0%, transparent 80%);
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background-color: rgba(13, 20, 30, 0.9);
+  clip-path: inherit;
+  z-index: -1;
+  transition: background-color 0.3s ease;
+}
+
+.filter-btn::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background-image: radial-gradient(circle, rgba(0, 200, 255, 0.15) 0%, transparent 80%);
   opacity: 0;
+  clip-path: inherit;
+  z-index: -1;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .filter-btn:hover {
-  border-color: var(--color-border-glow);
+  background-color: var(--color-border-glow);
   color: var(--color-text-primary);
   box-shadow: 0 0 8px rgba(0, 200, 255, 0.2);
 }
 
-.filter-btn:hover::before {
+.filter-btn:hover::after {
   opacity: 1;
 }
 
 .filter-btn.active {
-  border-color: var(--color-resistance);
+  background-color: var(--color-resistance);
   color: var(--color-resistance);
-  background: rgba(0, 200, 255, 0.08);
   box-shadow: 0 0 12px rgba(0, 200, 255, 0.15);
   font-weight: bold;
+}
+
+.filter-btn.active::before {
+  background-color: rgba(0, 200, 255, 0.08);
 }
 
 /* Content Area */
@@ -204,71 +225,72 @@ body.scanner-theme {
 
 /* Event Cards */
 .event-card {
-  background: var(--color-bg-panel);
-  border: 1px solid var(--color-border-default);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background-color: var(--color-border-default);
+  border: none;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   position: relative;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  isolation: isolate;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
   clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%);
   animation: card-appear 0.5s ease-out;
 }
 
-.event-card::after {
+.event-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 15px;
-  height: 15px;
-  background: var(--color-border-default);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  pointer-events: none;
-  transition: background 0.3s ease;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background-color: var(--color-bg-panel);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  clip-path: inherit;
+  z-index: -1;
+  transition: background-color 0.3s ease;
 }
 
 /* Hover effects */
 .event-card:hover {
   transform: translateY(-4px);
-  border-color: var(--color-resistance);
+  background-color: var(--color-resistance);
   box-shadow: 0 5px 20px rgba(0, 200, 255, 0.15);
 }
 
-.event-card:hover::after {
-  background: var(--color-resistance);
+.event-card:hover::before {
+  background-color: rgba(20, 30, 45, 0.9); /* Subtly brightened background */
 }
 
 /* Banner states */
-.event-card.active-state {
-  border-left: 4px solid var(--color-enlightened);
+.event-card.active-state::before {
+  border-left: 3px solid var(--color-enlightened);
 }
 .event-card.active-state:hover {
-  border-color: var(--color-enlightened);
+  background-color: var(--color-enlightened);
   box-shadow: 0 5px 20px rgba(2, 255, 119, 0.15);
 }
-.event-card.active-state:hover::after {
-  background: var(--color-enlightened);
-}
 
-.event-card.upcoming-state {
-  border-left: 4px solid var(--color-resistance);
+.event-card.upcoming-state::before {
+  border-left: 3px solid var(--color-resistance);
+}
+.event-card.upcoming-state:hover {
+  background-color: var(--color-resistance);
+  box-shadow: 0 5px 20px rgba(0, 200, 255, 0.15);
 }
 
 .event-card.past-state {
-  border-left: 4px solid var(--color-text-muted);
   opacity: 0.65;
+}
+.event-card.past-state::before {
+  border-left: 3px solid var(--color-text-muted);
 }
 .event-card.past-state:hover {
   opacity: 0.9;
-  border-color: var(--color-text-secondary);
+  background-color: var(--color-text-secondary);
   box-shadow: 0 5px 20px rgba(148, 163, 184, 0.1);
-}
-.event-card.past-state:hover::after {
-  background: var(--color-text-secondary);
 }
 
 /* Event Header */
@@ -589,14 +611,13 @@ body.scanner-theme {
 
 /* Green active filter selections */
 .filter-btn.active {
-  border-color: var(--color-enlightened) !important;
   color: var(--color-enlightened) !important;
-  background: rgba(2, 255, 119, 0.08) !important;
+  background-color: var(--color-enlightened) !important;
   box-shadow: 0 0 12px rgba(2, 255, 119, 0.25) !important;
 }
 
-.filter-btn.active .btn-glow {
-  box-shadow: 0 0 10px var(--color-enlightened) !important;
+.filter-btn.active::before {
+  background-color: rgba(2, 255, 119, 0.08) !important;
 }
 
 /* Calendar Timeline Panel */
@@ -770,14 +791,27 @@ body.scanner-theme {
   animation: card-highlight-glow 2.5s ease-out;
 }
 
+.highlight-pulse::before {
+  animation: card-highlight-bg 2.5s ease-out;
+}
+
 @keyframes card-highlight-glow {
   0%, 100% {
-    border-color: var(--color-border-default);
+    background-color: var(--color-border-default);
     box-shadow: none;
   }
   15%, 50% {
-    border-color: var(--color-enlightened);
+    background-color: var(--color-enlightened);
     box-shadow: 0 0 25px rgba(2, 255, 119, 0.4);
+  }
+}
+
+@keyframes card-highlight-bg {
+  0%, 100% {
+    background-color: var(--color-bg-panel);
+  }
+  15%, 50% {
+    background-color: rgba(25, 38, 56, 0.9); /* Subtly brightened background */
   }
 }
 
@@ -833,23 +867,41 @@ body.scanner-theme {
 }
 
 .expand-btn {
-  background: rgba(2, 255, 119, 0.05);
-  border: 1px solid var(--color-enlightened);
+  background-color: var(--color-enlightened);
+  border: none;
   padding: 0.75rem 2.5rem;
   color: var(--color-enlightened);
   font-family: var(--font-sci-fi);
   font-size: 0.8rem;
   letter-spacing: 1.5px;
   cursor: pointer;
+  position: relative;
+  isolation: isolate;
   transition: all 0.2s ease;
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
   box-shadow: 0 0 5px rgba(2, 255, 119, 0.1);
 }
 
+.expand-btn::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background-color: rgba(2, 255, 119, 0.05);
+  clip-path: inherit;
+  z-index: -1;
+  transition: all 0.2s ease;
+}
+
 .expand-btn:hover {
-  background: rgba(2, 255, 119, 0.15);
   box-shadow: 0 0 12px rgba(2, 255, 119, 0.3);
   color: var(--color-text-primary);
+}
+
+.expand-btn:hover::before {
+  background-color: rgba(2, 255, 119, 0.15);
 }
 
 .hidden-archived {

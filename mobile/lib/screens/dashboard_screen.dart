@@ -18,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   
   List<Article> _articles = [];
   bool _isLoading = false;
-  String _statusMessage = 'SYNCHRONIZING REQUIRED';
+  String _lastUpdated = 'SYNCHRONIZING REQUIRED';
   Color _statusColor = const Color(0xFF00c8ff);
 
   @override
@@ -30,7 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _fetchEvents() async {
     setState(() {
       _isLoading = true;
-      _statusMessage = 'ESTABLISHING SECURE LINK...';
+      _lastUpdated = 'ESTABLISHING SECURE LINK...';
       _statusColor = const Color(0xFF00c8ff);
     });
 
@@ -40,10 +40,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final List<dynamic> data = json.decode(response.body);
         final List<Article> parsedArticles = data.map((json) => Article.fromJson(json)).toList();
 
+        int latestTimestamp = 0;
+        for (var art in parsedArticles) {
+          if (art.publishedAt > latestTimestamp) {
+            latestTimestamp = art.publishedAt;
+          }
+        }
+        
+        String formattedLastUpdated = 'UNKNOWN';
+        if (latestTimestamp > 0) {
+          final lastUpdatedDate = DateTime.fromMillisecondsSinceEpoch(latestTimestamp);
+          final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
+          formattedLastUpdated = formatter.format(lastUpdatedDate.toLocal());
+        }
+
         setState(() {
           _articles = parsedArticles;
           _isLoading = false;
-          _statusMessage = _hasActiveAnomaly() ? 'ACTIVE ANOMALY DETECTED' : 'SCANNER STABLE';
+          _lastUpdated = 'UPDATED: $formattedLastUpdated';
           _statusColor = _hasActiveAnomaly() ? const Color(0xFFff2a6d) : const Color(0xFF02ff77);
         });
 
@@ -64,7 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _statusMessage = 'LINK ERROR - SYNCS FAILED';
+        _lastUpdated = 'LINK ERROR - SYNCS FAILED';
         _statusColor = const Color(0xFFff2a6d);
       });
       if (mounted) {
@@ -225,7 +239,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    _statusMessage,
+                    _lastUpdated,
                     style: TextStyle(
                       color: _statusColor,
                       fontFamily: 'Orbitron',
