@@ -98,7 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (latestTimestamp > 0) {
           const lastUpdatedDate = new Date(latestTimestamp);
-          const lastUpdatedStr = formatEventTime(lastUpdatedDate, 'global');
+          const year = lastUpdatedDate.getFullYear();
+          const month = String(lastUpdatedDate.getMonth() + 1).padStart(2, '0');
+          const day = String(lastUpdatedDate.getDate()).padStart(2, '0');
+          const lastUpdatedStr = `${year}-${month}-${day}`;
           if (lastUpdatedEl) {
             lastUpdatedEl.textContent = lastUpdatedStr;
           }

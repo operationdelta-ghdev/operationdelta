@@ -611,13 +611,13 @@ body.scanner-theme {
 
 /* Green active filter selections */
 .filter-btn.active {
-  color: var(--color-enlightened) !important;
+  color: #000000 !important;
   background-color: var(--color-enlightened) !important;
   box-shadow: 0 0 12px rgba(2, 255, 119, 0.25) !important;
 }
 
 .filter-btn.active::before {
-  background-color: rgba(2, 255, 119, 0.08) !important;
+  background-color: var(--color-enlightened) !important;
 }
 
 /* Calendar Timeline Panel */
@@ -870,7 +870,7 @@ body.scanner-theme {
   background-color: var(--color-enlightened);
   border: none;
   padding: 0.75rem 2.5rem;
-  color: var(--color-enlightened);
+  color: #000000;
   font-family: var(--font-sci-fi);
   font-size: 0.8rem;
   letter-spacing: 1.5px;
@@ -889,7 +889,7 @@ body.scanner-theme {
   left: 1px;
   right: 1px;
   bottom: 1px;
-  background-color: rgba(2, 255, 119, 0.05);
+  background-color: var(--color-enlightened);
   clip-path: inherit;
   z-index: -1;
   transition: all 0.2s ease;
@@ -897,11 +897,11 @@ body.scanner-theme {
 
 .expand-btn:hover {
   box-shadow: 0 0 12px rgba(2, 255, 119, 0.3);
-  color: var(--color-text-primary);
+  color: #000000;
 }
 
 .expand-btn:hover::before {
-  background-color: rgba(2, 255, 119, 0.15);
+  background-color: #05ff7b;
 }
 
 .hidden-archived {

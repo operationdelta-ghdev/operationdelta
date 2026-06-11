@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         String formattedLastUpdated = 'UNKNOWN';
         if (latestTimestamp > 0) {
           final lastUpdatedDate = DateTime.fromMillisecondsSinceEpoch(latestTimestamp);
-          final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
+          final DateFormat formatter = DateFormat('yyyy-MM-dd');
           formattedLastUpdated = formatter.format(lastUpdatedDate.toLocal());
         }
 
