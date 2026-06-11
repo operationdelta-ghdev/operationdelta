@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let allEvents = [];
   let activeFilter = 'all';
   let trackerInterval = null;
+  let clickedCardId = null;
+  let activeClickTimeout = null;
 
   // DOM Elements
   const eventsGrid = document.getElementById('events-grid');
@@ -208,6 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
       expandContainer.id = 'expand-archived-container';
       
       const expandBtn = document.createElement('button');
+      expandBtn.id = 'expand-archived-btn';
       expandBtn.className = 'expand-btn';
       expandBtn.textContent = `SHOW ALL ARCHIVED (+${pastCount - 3})`;
       
@@ -361,6 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
       weekEl.className = 'cal-week-lbl';
       if (w === 1) {
         weekEl.classList.add('current-week-lbl');
+      } else if (w > 1) {
+        weekEl.classList.add('upcoming-week-lbl');
       }
       weekEl.textContent = weekLabels[w];
       calWeeks.appendChild(weekEl);
@@ -440,33 +445,70 @@ document.addEventListener('DOMContentLoaded', () => {
       // Tap/Hover highlight card interaction
       const cardId = `card-${evt.articleId}-${evt.name.replace(/\s+/g, '-').toLowerCase()}`;
       
-      const triggerHighlight = () => {
+      const highlightCard = (shouldScroll) => {
         const card = document.getElementById(cardId);
         if (card) {
           const wasHidden = card.classList.contains('hidden-archived');
           if (wasHidden) {
             card.classList.remove('hidden-archived');
+            card.classList.add('temp-visible');
           }
           
-          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          card.classList.remove('highlight-pulse');
-          void card.offsetWidth; 
-          card.classList.add('highlight-pulse');
-          
-          setTimeout(() => {
-            card.classList.remove('highlight-pulse');
-            if (wasHidden) {
-              const expandBtn = document.getElementById('expand-archived-btn');
-              if (expandBtn && expandBtn.textContent.includes('SHOW ALL')) {
-                card.classList.add('hidden-archived');
+          if (shouldScroll) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Handle click state: keep highlighted/visible for 2.5 seconds
+            if (activeClickTimeout) {
+              clearTimeout(activeClickTimeout);
+            }
+            if (clickedCardId && clickedCardId !== cardId) {
+              // Reset previous clicked card immediately
+              const prevCard = document.getElementById(clickedCardId);
+              if (prevCard) {
+                prevCard.classList.remove('highlight-pulse');
+                if (prevCard.classList.contains('temp-visible')) {
+                  prevCard.classList.remove('temp-visible');
+                  const expandBtn = document.getElementById('expand-archived-btn');
+                  if (expandBtn && expandBtn.textContent.includes('SHOW ALL')) {
+                    prevCard.classList.add('hidden-archived');
+                  }
+                }
               }
             }
-          }, 2500);
+            clickedCardId = cardId;
+            activeClickTimeout = setTimeout(() => {
+              clickedCardId = null;
+              unhighlightCard();
+            }, 2500);
+          }
+          
+          card.classList.remove('highlight-pulse');
+          void card.offsetWidth; // force reflow
+          card.classList.add('highlight-pulse');
         }
       };
 
-      bar.addEventListener('click', triggerHighlight);
-      bar.addEventListener('mouseenter', triggerHighlight);
+      const unhighlightCard = () => {
+        // If this card is currently clicked and under its 2.5s timer, do not remove hover highlight
+        if (clickedCardId === cardId) {
+          return;
+        }
+        const card = document.getElementById(cardId);
+        if (card) {
+          card.classList.remove('highlight-pulse');
+          if (card.classList.contains('temp-visible')) {
+            card.classList.remove('temp-visible');
+            const expandBtn = document.getElementById('expand-archived-btn');
+            if (expandBtn && expandBtn.textContent.includes('SHOW ALL')) {
+              card.classList.add('hidden-archived');
+            }
+          }
+        }
+      };
+
+      bar.addEventListener('click', () => highlightCard(true));
+      bar.addEventListener('mouseenter', () => highlightCard(false));
+      bar.addEventListener('mouseleave', unhighlightCard);
       
       row.appendChild(bar);
       calTimeline.appendChild(row);
