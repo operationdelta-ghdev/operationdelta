@@ -13,8 +13,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // Configurable database URL (raw events.json URL from user's future repo)
-  String _databaseUrl = 'https://raw.githubusercontent.com/username/repo/main/events.json';
+  // Configurable database URL (raw events.json URL from user's repository)
+  String _databaseUrl = 'https://raw.githubusercontent.com/operationdelta-ghdev/operationdelta/main/events.json';
   
   List<Article> _articles = [];
   bool _isLoading = false;
