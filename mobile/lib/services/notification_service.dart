@@ -46,11 +46,16 @@ class NotificationService {
       },
     );
 
-    // Request permissions for Android 13+
+    // Request permissions for Android 13+ and exact alarms permission for Android 12+
     final androidImplementation = _notificationsPlugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
     if (androidImplementation != null) {
       await androidImplementation.requestNotificationsPermission();
+      try {
+        await androidImplementation.requestExactAlarmsPermission();
+      } catch (e) {
+        debugPrint("Error requesting exact alarms permission: $e");
+      }
     }
   }
 
