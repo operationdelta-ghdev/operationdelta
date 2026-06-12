@@ -17,7 +17,7 @@ dependencies:
   
   # Timezone databases and calculations
   timezone: ^0.9.2
-  flutter_timezone: ^1.0.8
+  flutter_timezone: ^3.0.1
   
   # Helper to format display dates
   intl: ^0.19.0
