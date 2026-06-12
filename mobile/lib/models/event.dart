@@ -77,7 +77,7 @@ class IngressEvent {
     DateTime start = getAdjustedStart(now);
     DateTime end = getAdjustedEnd(now);
     
-    if (now.isAfter(start) && now.isBefore(end)) {
+    if (!now.isBefore(start) && now.isBefore(end)) {
       return 'active';
     } else if (now.isBefore(start)) {
       return 'upcoming';

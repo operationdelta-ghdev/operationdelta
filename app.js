@@ -540,6 +540,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update event tickers live every second
   function updateTrackers() {
     const now = new Date();
+    let stateChanged = false;
+    
     allEvents.forEach(evt => {
       if (evt.computedState === 'active' || evt.computedState === 'upcoming') {
         const trackerId = `tracker-${evt.articleId}-${evt.name.replace(/\s+/g, '-').toLowerCase()}`;
@@ -564,6 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (diffMs <= 0) {
           textEl.textContent = evt.computedState === 'active' ? 'MUTATION COMPLETE' : 'MUTATION ACTIVE';
+          stateChanged = true;
           return;
         }
         
@@ -587,6 +590,13 @@ document.addEventListener('DOMContentLoaded', () => {
         textEl.textContent = prefix + timeStr;
       }
     });
+
+    if (stateChanged) {
+      sortEvents();
+      renderEvents();
+      renderCalendar();
+      updateStatusPanel();
+    }
   }
 
   function updateStatusPanel() {

@@ -94,7 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Portal database synced. Alarms updated successfully."),
+              content: Text("Portal database synced. Scheduled notifications updated successfully."),
               backgroundColor: Color(0xFF02ff77),
             ),
           );
@@ -171,7 +171,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               title: const Text(
-                "ALARM_OPTIONS",
+                "Notification Options",
                 style: TextStyle(
                   color: Color(0xFF00c8ff),
                   fontFamily: 'Orbitron',
@@ -269,6 +269,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2.0,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                _lastUpdated,
+                style: TextStyle(
+                  color: _statusColor,
+                  fontFamily: 'Orbitron',
+                  fontSize: 8,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.0,
                 ),
               ),
             ],
@@ -443,6 +454,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     prefix: stateFilter == 'active' ? 'REMAINING: ' : 'STARTS IN: ',
                     finishedText: stateFilter == 'active' ? 'MUTATION COMPLETE' : 'MUTATION ACTIVE',
                     accentColor: accentColor,
+                    onFinished: () {
+                      setState(() {});
+                    },
                   ),
                 ],
                 const SizedBox(height: 12),
@@ -604,7 +618,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "ANOMALY TIMELINE MATRIX",
+                "TIMELINE VIEW",
                 style: TextStyle(
                   color: Color(0xFF00c8ff),
                   fontFamily: 'Orbitron',
@@ -614,7 +628,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Text(
-                "28-DAY SCANNER VECTOR",
+                "28-DAY VIEWING WINDOW",
                 style: TextStyle(
                   color: const Color(0xFF475569),
                   fontFamily: 'Orbitron',
@@ -866,14 +880,16 @@ class CountdownWidget extends StatefulWidget {
   final String prefix;
   final String finishedText;
   final Color accentColor;
+  final VoidCallback? onFinished;
 
   const CountdownWidget({
-    Key? key,
+    super.key,
     required this.targetTime,
     required this.prefix,
     required this.finishedText,
     required this.accentColor,
-  }) : super(key: key);
+    this.onFinished,
+  });
 
   @override
   State<CountdownWidget> createState() => _CountdownWidgetState();
@@ -887,18 +903,40 @@ class _CountdownWidgetState extends State<CountdownWidget> {
   void initState() {
     super.initState();
     _calculateTimeRemaining();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) {
-        setState(() {
-          _calculateTimeRemaining();
-        });
-      }
-    });
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    if (_timeRemaining.inSeconds > 0) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (mounted) {
+          final wasPositive = _timeRemaining.inSeconds > 0;
+          setState(() {
+            _calculateTimeRemaining();
+          });
+          if (wasPositive && (_timeRemaining.isNegative || _timeRemaining.inSeconds <= 0)) {
+            _timer?.cancel();
+            _timer = null;
+            widget.onFinished?.call();
+          }
+        }
+      });
+    }
   }
 
   void _calculateTimeRemaining() {
     final now = DateTime.now();
     _timeRemaining = widget.targetTime.difference(now);
+  }
+
+  @override
+  void didUpdateWidget(covariant CountdownWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.targetTime != widget.targetTime) {
+      _calculateTimeRemaining();
+      _startTimer();
+    }
   }
 
   @override
