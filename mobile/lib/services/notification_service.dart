@@ -12,8 +12,14 @@ class NotificationService {
   NotificationService._internal();
 
   final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  Future<void>? _initFuture;
 
   Future<void> init() async {
+    _initFuture ??= _initImpl();
+    await _initFuture;
+  }
+
+  Future<void> _initImpl() async {
     // 1. Initialize Timezones
     tz_data.initializeTimeZones();
     try {
@@ -61,6 +67,12 @@ class NotificationService {
 
   // Resets and schedules alerts for all active and upcoming events
   Future<void> rescheduleAlarms(List<Article> articles) async {
+    // Ensure plugin is initialized before scheduling
+    if (_initFuture != null) {
+      await _initFuture;
+    } else {
+      await init();
+    }
     // Cancel all previously scheduled alarms first to prevent duplicates
     await _notificationsPlugin.cancelAll();
     debugPrint("Cancelled all old notifications. Scheduling fresh alarms...");
@@ -185,14 +197,33 @@ class NotificationService {
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: payload,
       );
-      debugPrint("Scheduled notification '$title' for $scheduledTime");
+      debugPrint("Scheduled exact notification '$title' for $scheduledTime");
     } catch (e) {
-      debugPrint("Error scheduling notification: $e");
+      debugPrint("Security or other error scheduling exact notification: $e. Falling back to inexact scheduling...");
+      try {
+        await _notificationsPlugin.zonedSchedule(
+          id,
+          title,
+          body,
+          scheduledTime,
+          platformDetails,
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          payload: payload,
+        );
+        debugPrint("Scheduled inexact notification '$title' for $scheduledTime");
+      } catch (ex) {
+        debugPrint("Error scheduling fallback notification: $ex");
+      }
     }
   }
 
-  // Converts standard local DateTime to timezone's TZDateTime
+  // Converts standard local DateTime to timezone's TZDateTime using milliseconds since epoch for exact alignment
   tz.TZDateTime _toTZDateTime(DateTime dateTime) {
-    return tz.TZDateTime.from(dateTime, tz.local);
+    return tz.TZDateTime.fromMillisecondsSinceEpoch(
+      tz.local,
+      dateTime.millisecondsSinceEpoch,
+    );
   }
 }
