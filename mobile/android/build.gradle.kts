@@ -24,13 +24,17 @@ tasks.register<Delete>("clean") {
 }
 
 subprojects {
-    tasks.withType<JavaCompile>().configureEach {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
-    }
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        val javaCompile = project.tasks.withType<JavaCompile>().firstOrNull()
+        val javaTarget = javaCompile?.targetCompatibility
+        val targetEnum = when (javaTarget) {
+            "1.8", "8", "JVM_1_8" -> org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8
+            "11" -> org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+            "17" -> org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+            else -> org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+        }
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+            jvmTarget.set(targetEnum)
         }
     }
 }

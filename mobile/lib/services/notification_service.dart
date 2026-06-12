@@ -4,6 +4,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import '../models/event.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -59,14 +60,25 @@ class NotificationService {
     await _notificationsPlugin.cancelAll();
     debugPrint("Cancelled all old notifications. Scheduling fresh alarms...");
 
+    // Load preferences
+    final prefs = await SharedPreferences.getInstance();
+    final bool notifyStart = prefs.getBool('notify_event_start') ?? true;
+    final bool notifyOneDayStart = prefs.getBool('notify_one_day_start') ?? true;
+    final bool notifyOneDayEnd = prefs.getBool('notify_one_day_end') ?? true;
+    final bool notifyEnd = prefs.getBool('notify_event_end') ?? true;
+
+    debugPrint("Notification preferences -> Start: $notifyStart, 1DayStart: $notifyOneDayStart, 1DayEnd: $notifyOneDayEnd, End: $notifyEnd");
+
     final DateTime now = DateTime.now();
     int notificationId = 100; // unique incremental counter
 
     for (var article in articles) {
       for (var event in eventList(article)) {
-        // Schedule Start notification
         final DateTime startLocal = event.getAdjustedStart(now);
-        if (startLocal.isAfter(now)) {
+        final DateTime endLocal = event.getAdjustedEnd(now);
+
+        // 1. Event Start notification
+        if (notifyStart && startLocal.isAfter(now)) {
           final tz.TZDateTime tzStart = _toTZDateTime(startLocal);
           await _scheduleNotification(
             id: notificationId++,
@@ -77,14 +89,43 @@ class NotificationService {
           );
         }
 
-        // Schedule End notification
-        final DateTime endLocal = event.getAdjustedEnd(now);
-        if (endLocal.isAfter(now)) {
+        // 2. 1 day notice before event start
+        if (notifyOneDayStart) {
+          final DateTime oneDayBeforeStart = startLocal.subtract(const Duration(days: 1));
+          if (oneDayBeforeStart.isAfter(now)) {
+            final tz.TZDateTime tzOneDayStart = _toTZDateTime(oneDayBeforeStart);
+            await _scheduleNotification(
+              id: notificationId++,
+              title: "Ingress Event Notice: ${event.name} starts in 24h",
+              body: "Prepare for upcoming changes: ${event.changes.isNotEmpty ? event.changes[0] : 'Gameplay mechanics.'}",
+              scheduledTime: tzOneDayStart,
+              payload: event.name,
+            );
+          }
+        }
+
+        // 3. 1 day notice before event end
+        if (notifyOneDayEnd) {
+          final DateTime oneDayBeforeEnd = endLocal.subtract(const Duration(days: 1));
+          if (oneDayBeforeEnd.isAfter(now) && oneDayBeforeEnd.isBefore(endLocal)) {
+            final tz.TZDateTime tzOneDayEnd = _toTZDateTime(oneDayBeforeEnd);
+            await _scheduleNotification(
+              id: notificationId++,
+              title: "Ingress Event Notice: ${event.name} ends in 24h",
+              body: "Make the most of the active modifiers before they revert.",
+              scheduledTime: tzOneDayEnd,
+              payload: event.name,
+            );
+          }
+        }
+
+        // 4. Event End notification
+        if (notifyEnd && endLocal.isAfter(now)) {
           final tz.TZDateTime tzEnd = _toTZDateTime(endLocal);
           await _scheduleNotification(
             id: notificationId++,
             title: "Ingress Event Ending: ${event.name}",
-            body: " gameplay changes are reverting back to default. Stand down.",
+            body: "Gameplay changes are reverting back to default. Stand down.",
             scheduledTime: tzEnd,
             payload: event.name,
           );

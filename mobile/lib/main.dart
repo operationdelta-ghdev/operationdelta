@@ -19,7 +19,7 @@ class IngressEventApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ingress Scanner console',
+      title: 'Operation Delta',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF080b11),
