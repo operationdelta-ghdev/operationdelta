@@ -23,7 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    super.key;
+    super.initState();
     _fetchEvents();
   }
 
@@ -205,7 +205,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFF0d141e),
           elevation: 0,
-          shape: const BorderSide(color: Color(0style: BorderStyle.none), width: 0),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -276,7 +275,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         body: _isLoading
             ? const Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisSize.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(
                       color: Color(0xFF00c8ff),
@@ -352,7 +351,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final accentColor = isAccentEnlightened ? const Color(0xFF02ff77) : const Color(0xFF00c8ff);
 
         return Card(
-          margin: const EdgeInsets.bottom(16),
+          margin: const EdgeInsets.only(bottom: 16),
           color: const Color(0xFF0d141e).withOpacity(0.85),
           shape: RoundedRectangleBorder(
             side: BorderSide(
@@ -367,7 +366,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.between,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
@@ -383,9 +382,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, py: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                       decoration: BoxDecoration(
-                        border: Border.solid(
+                        border: Border.all(
                           color: event.timingType == 'local' ? const Color(0xFF02ff77) : const Color(0xFF00c8ff),
                           width: 1,
                         ),
@@ -422,7 +421,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.between,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("START:", style: TextStyle(color: Color(0xFF94a3b8), fontSize: 10, fontFamily: 'Orbitron')),
                           Text(startStr, style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
@@ -430,7 +429,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       const SizedBox(height: 4),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.between,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("END:", style: TextStyle(color: Color(0xFF94a3b8), fontSize: 10, fontFamily: 'Orbitron')),
                           Text(endStr, style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
