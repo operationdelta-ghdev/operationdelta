@@ -628,20 +628,7 @@ body.scanner-theme {
   -webkit-backdrop-filter: blur(10px);
   padding: 1.5rem;
   margin-bottom: 2rem;
-  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
   position: relative;
-}
-
-.calendar-panel::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 15px;
-  height: 15px;
-  background: var(--color-border-default);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  pointer-events: none;
 }
 
 .panel-title {

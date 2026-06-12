@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ingress Event Tracker // Scanner Console</title>
-  
+  <title>Operation_Delta: An Ingress Event Tracker</title>
+
   <!-- SEO Best Practices -->
-  <meta name="description" content="Monitor active and scheduled Ingress events, gameplay adjustments, portal anomalies, and timezone conversions in real-time.">
+  <meta name="description"
+    content="Monitor active and scheduled Ingress events, gameplay adjustments, portal anomalies, and timezone conversions in real-time.">
   <meta name="keywords" content="Ingress, Ingress Prime, Ingress Events, XM anomalies, Nigel Moyer, Ingress News">
-  
+
   <!-- Premium Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet">
+
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="index.css">
 </head>
+
 <body class="scanner-theme">
   <!-- Cyber Grid Background Decoration -->
   <div class="grid-overlay"></div>
@@ -29,13 +34,16 @@
         <div class="xm-node" id="status-node"></div>
         <div class="title-group">
           <h1 class="scanner-title delta-title">OPERATION_DELTA</h1>
-          <p class="scanner-tagline">Ingress Event Tracker</p>
+          <p class="scanner-tagline">An Ingress Event Tracker</p>
         </div>
       </div>
       <div class="status-panel">
-        <span class="status-item"><span class="label">LAST_UPDATED:</span> <span class="val" id="last-updated">SYNCHRONIZING...</span></span>
-        <span class="status-item"><span class="label">DATABASE:</span> <span class="val" id="db-count">0 EVENTS</span></span>
-        <span class="status-item"><span class="label">SECURE_LINK:</span> <span class="val green">ESTABLISHED</span></span>
+        <span class="status-item"><span class="label">LAST_UPDATED:</span> <span class="val"
+            id="last-updated">SYNCHRONIZING...</span></span>
+        <span class="status-item"><span class="label">DATABASE:</span> <span class="val" id="db-count">0
+            EVENTS</span></span>
+        <span class="status-item"><span class="label">SECURE_LINK:</span> <span
+            class="val green">ESTABLISHED</span></span>
       </div>
     </header>
 
@@ -81,8 +89,10 @@
 
       <!-- Empty State -->
       <div class="empty-state hidden" id="empty-state">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          class="empty-icon">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
         </svg>
         <p class="empty-text">NO ANOMALIES DETECTED IN THIS VECTOR.</p>
       </div>
@@ -102,4 +112,5 @@
   <!-- Main Controller Script -->
   <script src="app.js"></script>
 </body>
+
 </html>
