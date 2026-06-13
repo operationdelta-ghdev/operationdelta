@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/event.dart';
@@ -51,9 +51,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  late ScrollController _timelineScrollController;
+  double _scrollOffset = 0.0;
+  bool _hasCenteredTimeline = false;
+
+  void _onScroll() {
+    if (mounted) {
+      setState(() {
+        _scrollOffset = _timelineScrollController.offset;
+      });
+    }
+  }
+
+  void _centerCurrentWeek() {
+    if (!mounted) return;
+    if (_timelineScrollController.hasClients && !_hasCenteredTimeline) {
+      final viewportWidth = _timelineScrollController.position.viewportDimension;
+      if (viewportWidth > 0) {
+        final targetOffset = 336.0 - (viewportWidth / 2);
+        final maxScroll = _timelineScrollController.position.maxScrollExtent;
+        final minScroll = _timelineScrollController.position.minScrollExtent;
+        final boundedOffset = targetOffset.clamp(minScroll, maxScroll);
+        _timelineScrollController.jumpTo(boundedOffset);
+        _hasCenteredTimeline = true;
+      }
+    }
+  }
+
+  double _calculateTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return textPainter.size.width;
+  }
+
   @override
   void initState() {
     super.initState();
+    _timelineScrollController = ScrollController();
+    _timelineScrollController.addListener(_onScroll);
     _loadNotificationSettings();
     _fetchEvents();
     // Request runtime permissions after first frame, when an Activity is active.
@@ -65,6 +103,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         debugPrint('Error requesting notification permissions: $e');
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _timelineScrollController.removeListener(_onScroll);
+    _timelineScrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchEvents() async {
@@ -307,6 +352,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_hasCenteredTimeline) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _centerCurrentWeek();
+      });
+    }
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -653,6 +703,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return eventStart.isBefore(calEndOnly) && eventEnd.isAfter(calStartOnly);
     }).toList();
 
+    timelineEvents.sort((a, b) {
+      final IngressEvent eventA = a['event'];
+      final IngressEvent eventB = b['event'];
+      
+      final stateA = eventA.getStatus(now);
+      final stateB = eventB.getStatus(now);
+      
+      int getPriority(String state) {
+        if (state == 'active') return 0;
+        if (state == 'upcoming') return 1;
+        return 2;
+      }
+      
+      final int pA = getPriority(stateA);
+      final int pB = getPriority(stateB);
+      
+      if (pA != pB) {
+        return pA.compareTo(pB);
+      }
+      
+      final startA = eventA.getAdjustedStart(now);
+      final startB = eventB.getAdjustedStart(now);
+      return startA.compareTo(startB);
+    });
+
     const double dayWidth = 32.0;
     const double totalWidth = dayWidth * 28;
 
@@ -693,6 +768,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(height: 8),
           SingleChildScrollView(
+            controller: _timelineScrollController,
             scrollDirection: Axis.horizontal,
             child: SizedBox(
               width: totalWidth,
@@ -851,6 +927,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
       barColor = const Color(0xFF00c8ff);
     }
 
+    final double barLeft = left + 2;
+    final double barWidth = width - 4;
+
+    const TextStyle textStyle = TextStyle(
+      color: Colors.black,
+      fontFamily: 'Orbitron',
+      fontSize: 8,
+      fontWeight: FontWeight.bold,
+    );
+
+    final double textWidth = _calculateTextWidth(event.name, textStyle);
+    final double contentWidth = textWidth + 12.0;
+
+    double dx = 0.0;
+    if (barWidth > contentWidth) {
+      final double maxOffset = barWidth - contentWidth;
+      final double desiredOffset = _scrollOffset - barLeft;
+      dx = desiredOffset.clamp(0.0, maxOffset);
+    }
+
     return Container(
       height: 28,
       decoration: BoxDecoration(
@@ -859,8 +955,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Stack(
         children: [
           Positioned(
-            left: left + 2,
-            width: width - 4,
+            left: barLeft,
+            width: barWidth,
             top: 4,
             height: 20,
             child: Tooltip(
@@ -894,7 +990,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  padding: EdgeInsets.only(left: 6 + dx, right: 6),
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
                     color: barColor.withOpacity(0.85),
@@ -909,11 +1005,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   child: Text(
                     event.name,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Orbitron',
-                      fontSize: 8,
-                      fontWeight: FontWeight.bold,
+                    style: textStyle.copyWith(
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
