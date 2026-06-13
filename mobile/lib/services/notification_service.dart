@@ -85,12 +85,17 @@ class NotificationService {
         debugPrint('WARNING: User denied notification permission. Notifications will not appear.');
       }
 
-      // Request SCHEDULE_EXACT_ALARM permission (Android 12+)
+      // With USE_EXACT_ALARM declared in the manifest, exact alarms are auto-granted
+      // at install time. We just verify and log — no runtime prompt needed.
       try {
-        final bool? exactGranted = await androidImpl.requestExactAlarmsPermission();
-        debugPrint('Exact alarm permission granted: $exactGranted');
+        final bool? canExact = await androidImpl.canScheduleExactNotifications();
+        debugPrint('Can schedule exact notifications: $canExact');
+        if (canExact == false) {
+          debugPrint('WARNING: Exact alarm scheduling unavailable. '
+              'Notifications will use inexact delivery.');
+        }
       } catch (e) {
-        debugPrint('Exact alarm permission unavailable (pre-Android 12): $e');
+        debugPrint('canScheduleExactNotifications unavailable (pre-Android 12): $e');
       }
     }
   }
