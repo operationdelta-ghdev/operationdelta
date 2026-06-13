@@ -254,6 +254,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       _saveNotificationSetting('notify_event_end', value);
                     },
                   ),
+                  const Divider(color: Color(0xFF1e293b), thickness: 1, height: 24),
+                  // ── Debug button ────────────────────────────────────────────
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.notifications_active, color: Color(0xFFff2a6d), size: 16),
+                      label: const Text(
+                        "FIRE TEST NOTIFICATION",
+                        style: TextStyle(
+                          color: Color(0xFFff2a6d),
+                          fontFamily: 'Orbitron',
+                          fontSize: 11,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Color(0xFFff2a6d)),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        final result = await NotificationService().sendTestNotification();
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(result),
+                              backgroundColor: result.startsWith('SUCCESS')
+                                  ? const Color(0xFF02ff77)
+                                  : const Color(0xFFff2a6d),
+                              duration: const Duration(seconds: 5),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
               actions: [

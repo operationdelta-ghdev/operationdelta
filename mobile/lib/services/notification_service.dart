@@ -55,6 +55,35 @@ class NotificationService {
     await requestPermissions();
   }
 
+  /// Fires an immediate visible notification — use to verify channel/permission setup.
+  Future<String> sendTestNotification() async {
+    if (!_initialized) await initPlugin();
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      _channelId,
+      _channelName,
+      channelDescription: _channelDesc,
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      enableVibration: true,
+    );
+    const NotificationDetails details = NotificationDetails(
+      android: androidDetails,
+      iOS: DarwinNotificationDetails(presentAlert: true, presentSound: true),
+    );
+    try {
+      await _notificationsPlugin.show(
+        0,
+        '🔔 Test Notification',
+        'If you see this, channel and permissions are working correctly.',
+        details,
+      );
+      return 'SUCCESS: Immediate notification sent.';
+    } catch (e) {
+      return 'FAILED: $e';
+    }
+  }
+
   Future<void> _initPluginImpl() async {
     // 1. Initialize Timezones
     tz_data.initializeTimeZones();
@@ -108,15 +137,17 @@ class NotificationService {
 
   // Resets and schedules alerts for all active and upcoming events
   Future<void> rescheduleAlarms(List<Article> articles) async {
-    // Ensure plugin is initialized before scheduling
-    if (!_initialized) await init();
+    // Ensure the plugin is initialized. Only call initPlugin() here —
+    // requestPermissions() is handled separately via post-frame callback
+    // so we do not show a second unexpected permission dialog.
+    if (!_initialized) await initPlugin();
     
     // Cancel all previously scheduled alarms first to prevent duplicates
     await _notificationsPlugin.cancelAll();
-    debugPrint("Cancelled all old notifications. Scheduling fresh alarms for ${articles.length} articles...");
+    debugPrint('Cancelled all old notifications. Scheduling alarms for ${articles.length} articles...');
 
     if (articles.isEmpty) {
-      debugPrint("No articles provided. Alarms cleared.");
+      debugPrint('No articles provided. Alarms cleared.');
       return;
     }
 
@@ -127,10 +158,12 @@ class NotificationService {
     final bool notifyOneDayEnd = prefs.getBool('notify_one_day_end') ?? true;
     final bool notifyEnd = prefs.getBool('notify_event_end') ?? true;
 
-    debugPrint("Notification preferences -> Start: $notifyStart, 1DayStart: $notifyOneDayStart, 1DayEnd: $notifyOneDayEnd, End: $notifyEnd");
+    debugPrint('Notification prefs → Start:$notifyStart 1DayStart:$notifyOneDayStart 1DayEnd:$notifyOneDayEnd End:$notifyEnd');
 
     final DateTime now = DateTime.now();
-    int notificationId = 100; // unique incremental counter
+    debugPrint('Scheduling relative to now: $now (${now.timeZoneName})');
+    int notificationId = 100;
+    int scheduledCount = 0;
 
     for (var article in articles) {
       for (var event in eventList(article)) {
@@ -140,6 +173,8 @@ class NotificationService {
         // 1. Event Start notification
         if (notifyStart && startLocal.isAfter(now)) {
           final tz.TZDateTime tzStart = _toTZDateTime(startLocal);
+          final diffMs = startLocal.difference(now).inSeconds;
+          debugPrint('→ Scheduling START for "${event.name}" at $tzStart (in ${diffMs}s)');
           await _scheduleNotification(
             id: notificationId++,
             title: "Ingress Event Starting: ${event.name}",
@@ -147,6 +182,9 @@ class NotificationService {
             scheduledTime: tzStart,
             payload: event.name,
           );
+          scheduledCount++;
+        } else if (notifyStart) {
+          debugPrint('→ SKIPPED START for "${event.name}": startLocal=$startLocal is not after now=$now');
         }
 
         // 2. 1 day notice before event start
@@ -154,6 +192,7 @@ class NotificationService {
           final DateTime oneDayBeforeStart = startLocal.subtract(const Duration(days: 1));
           if (oneDayBeforeStart.isAfter(now)) {
             final tz.TZDateTime tzOneDayStart = _toTZDateTime(oneDayBeforeStart);
+            debugPrint('→ Scheduling 24H-BEFORE-START for "${event.name}" at $tzOneDayStart');
             await _scheduleNotification(
               id: notificationId++,
               title: "Ingress Event Notice: ${event.name} starts in 24h",
@@ -161,6 +200,7 @@ class NotificationService {
               scheduledTime: tzOneDayStart,
               payload: event.name,
             );
+            scheduledCount++;
           }
         }
 
@@ -169,6 +209,7 @@ class NotificationService {
           final DateTime oneDayBeforeEnd = endLocal.subtract(const Duration(days: 1));
           if (oneDayBeforeEnd.isAfter(now) && oneDayBeforeEnd.isBefore(endLocal)) {
             final tz.TZDateTime tzOneDayEnd = _toTZDateTime(oneDayBeforeEnd);
+            debugPrint('→ Scheduling 24H-BEFORE-END for "${event.name}" at $tzOneDayEnd');
             await _scheduleNotification(
               id: notificationId++,
               title: "Ingress Event Notice: ${event.name} ends in 24h",
@@ -176,12 +217,14 @@ class NotificationService {
               scheduledTime: tzOneDayEnd,
               payload: event.name,
             );
+            scheduledCount++;
           }
         }
 
         // 4. Event End notification
         if (notifyEnd && endLocal.isAfter(now)) {
           final tz.TZDateTime tzEnd = _toTZDateTime(endLocal);
+          debugPrint('→ Scheduling END for "${event.name}" at $tzEnd');
           await _scheduleNotification(
             id: notificationId++,
             title: "Ingress Event Ending: ${event.name}",
@@ -189,10 +232,11 @@ class NotificationService {
             scheduledTime: tzEnd,
             payload: event.name,
           );
+          scheduledCount++;
         }
       }
     }
-    debugPrint("Finished scheduling alarms. Next ID: $notificationId");
+    debugPrint('Finished scheduling. $scheduledCount alarms registered. Next ID: $notificationId');
   }
 
   // Helper helper to flatmap article list into individual events
