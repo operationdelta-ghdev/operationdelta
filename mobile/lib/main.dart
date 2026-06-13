@@ -6,12 +6,13 @@ void main() async {
   // Ensure framework is ready for plugins
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize notification service BEFORE runApp so it is ready
-  // when the dashboard makes its first fetch and rescheduleAlarms() call.
+  // Phase 1: init plugin + timezone BEFORE runApp (no Activity needed).
+  // Phase 2: permission dialogs are triggered from DashboardScreen after
+  // the first frame renders, when an Activity context is available.
   try {
-    await NotificationService().init();
+    await NotificationService().initPlugin();
   } catch (e) {
-    debugPrint("Notification service initialization failed: $e");
+    debugPrint("Notification plugin initialization failed: $e");
   }
 
   runApp(const IngressEventApp());

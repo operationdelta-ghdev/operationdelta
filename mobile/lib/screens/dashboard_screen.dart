@@ -56,6 +56,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     _loadNotificationSettings();
     _fetchEvents();
+    // Request runtime permissions after first frame, when an Activity is active.
+    // This is required for the system notification dialog to appear on Android 13+.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await NotificationService().requestPermissions();
+      } catch (e) {
+        debugPrint('Error requesting notification permissions: $e');
+      }
+    });
   }
 
   Future<void> _fetchEvents() async {

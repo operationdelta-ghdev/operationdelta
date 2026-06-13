@@ -163,8 +163,8 @@
     "events": [
       {
         "name": "TEST_EVENT",
-        "start_time": "2026-06-13T06:41:00Z",
-        "end_time": "2026-06-13T06:51:00Z",
+        "start_time": "2026-06-13T06:47:00Z",
+        "end_time": "2026-06-13T06:57:00Z",
         "timing_type": "global",
         "changes": [
           "Live notification test successful.",

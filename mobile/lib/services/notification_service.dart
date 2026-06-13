@@ -20,13 +20,42 @@ class NotificationService {
   // Tracks whether init has been completed successfully
   bool _initialized = false;
 
-  Future<void> init() async {
+  // ── Phase 1: Initialize plugin + timezone (safe before runApp) ──────────────
+  Future<void> initPlugin() async {
     if (_initialized) return;
-    await _initImpl();
+    await _initPluginImpl();
     _initialized = true;
   }
 
-  Future<void> _initImpl() async {
+  // ── Phase 2: Request runtime permissions (must run after first frame) ────────
+  Future<void> requestPermissions() async {
+    final androidImpl = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    if (androidImpl == null) return;
+
+    // POST_NOTIFICATIONS (Android 13+) — shows a system dialog
+    final bool? notifGranted = await androidImpl.requestNotificationsPermission();
+    debugPrint('Notification permission granted: $notifGranted');
+    if (notifGranted == false) {
+      debugPrint('WARNING: User denied notification permission.');
+    }
+
+    // USE_EXACT_ALARM is auto-granted at install — just verify it's active
+    try {
+      final bool? canExact = await androidImpl.canScheduleExactNotifications();
+      debugPrint('Can schedule exact notifications: $canExact');
+    } catch (e) {
+      debugPrint('canScheduleExactNotifications check failed: $e');
+    }
+  }
+
+  // Keep backwards-compatible init() that does both phases
+  Future<void> init() async {
+    await initPlugin();
+    await requestPermissions();
+  }
+
+  Future<void> _initPluginImpl() async {
     // 1. Initialize Timezones
     tz_data.initializeTimeZones();
     try {
@@ -60,13 +89,10 @@ class NotificationService {
       },
     );
 
-    // 3. Android-specific setup
+    // 3. Create Android notification channel (required for Android 8+)
     final androidImpl = _notificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-
     if (androidImpl != null) {
-      // CRITICAL: Explicitly create the notification channel.
-      // Without this, notifications are silently dropped on Android 8+.
       const AndroidNotificationChannel channel = AndroidNotificationChannel(
         _channelId,
         _channelName,
@@ -77,26 +103,6 @@ class NotificationService {
       );
       await androidImpl.createNotificationChannel(channel);
       debugPrint('Notification channel created: $_channelId');
-
-      // Request POST_NOTIFICATIONS permission (Android 13+)
-      final bool? notifGranted = await androidImpl.requestNotificationsPermission();
-      debugPrint('Notification permission granted: $notifGranted');
-      if (notifGranted == false) {
-        debugPrint('WARNING: User denied notification permission. Notifications will not appear.');
-      }
-
-      // With USE_EXACT_ALARM declared in the manifest, exact alarms are auto-granted
-      // at install time. We just verify and log — no runtime prompt needed.
-      try {
-        final bool? canExact = await androidImpl.canScheduleExactNotifications();
-        debugPrint('Can schedule exact notifications: $canExact');
-        if (canExact == false) {
-          debugPrint('WARNING: Exact alarm scheduling unavailable. '
-              'Notifications will use inexact delivery.');
-        }
-      } catch (e) {
-        debugPrint('canScheduleExactNotifications unavailable (pre-Android 12): $e');
-      }
     }
   }
 
