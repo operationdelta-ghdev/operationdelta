@@ -98,7 +98,7 @@ class NotificationService {
 
     // 2. Initialize Notifications plugin
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('launcher_icon');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
 
     const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
