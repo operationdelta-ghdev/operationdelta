@@ -1,5 +1,161 @@
 [
   {
+    "id": "2026-q3-events",
+    "title": "July - September 2026 Schedule",
+    "url": "https://ingress.com/news/2026-q3-events",
+    "published_at": 1781296200000,
+    "events": [
+      {
+        "name": "July ▓▓▓▓▓▓▓ Campaign",
+        "start_time": "2026-07-03T18:00:00Z",
+        "end_time": "2026-07-27T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Stay prepared for new directives."
+        ]
+      },
+      {
+        "name": "First Saturday - July 2026",
+        "start_time": "2026-07-04T00:00:00Z",
+        "end_time": "2026-07-04T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "First Saturday medal will be awarded to in-person participants only.",
+          "Register through Fev Games."
+        ]
+      },
+      {
+        "name": "Second Sunday - July 2026",
+        "start_time": "2026-07-12T00:00:00Z",
+        "end_time": "2026-07-12T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "Complete the Second Sunday Campaign to increase your Second Sunday medal by 1 count.",
+          "Agents can earn progress toward the Second Sunday medal by completing at least one of the Bounties in the Second Sunday Campaign."
+        ]
+      },
+      {
+        "name": "Apollo Anomaly - Helsinki & Bogotá",
+        "start_time": "2026-07-18T00:00:00Z",
+        "end_time": "2026-07-18T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "Join the Anomaly battle in Helsinki, Finland and Bogotá, Colombia.",
+          "Commemorative Apollo Onsite Medal (single-tiered): Earned by participating in any Anomaly battle onsite.",
+          "Apollo Season Medal (3-tiered): Earned based on performance and participation."
+        ]
+      },
+      {
+        "name": "First Saturday - August 2026",
+        "start_time": "2026-08-01T00:00:00Z",
+        "end_time": "2026-08-01T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "First Saturday medal will be awarded to in-person participants only.",
+          "Register through Fev Games."
+        ]
+      },
+      {
+        "name": "August ▓▓▓▓▓▓▓ Campaign",
+        "start_time": "2026-08-05T18:00:00Z",
+        "end_time": "2026-08-31T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Stay prepared for new directives."
+        ]
+      },
+      {
+        "name": "Level 8 Week 2026",
+        "start_time": "2026-08-07T18:00:00Z",
+        "end_time": "2026-08-17T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Stay prepared for new directives."
+        ]
+      },
+      {
+        "name": "Second Sunday - August 2026",
+        "start_time": "2026-08-09T00:00:00Z",
+        "end_time": "2026-08-09T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "Complete the Second Sunday Campaign to increase your Second Sunday medal by 1 count.",
+          "Agents can earn progress toward the Second Sunday medal by completing at least one of the Bounties in the Second Sunday Campaign."
+        ]
+      },
+      {
+        "name": "Apollo Anomaly - Seoul & Paris",
+        "start_time": "2026-08-22T00:00:00Z",
+        "end_time": "2026-08-22T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "Join the Anomaly battle in Seoul, South Korea and Paris, France.",
+          "Commemorative Apollo Onsite Medal (single-tiered): Earned by participating in any Anomaly battle onsite.",
+          "Apollo Season Medal (3-tiered): Earned based on performance and participation."
+        ]
+      },
+      {
+        "name": "Apollo Global Campaign",
+        "start_time": "2026-08-26T18:00:00Z",
+        "end_time": "2026-09-16T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Stay prepared for new directives.",
+          "Global Campaign Medal (3-tiered): Earned based solely on performance during the Global Campaign."
+        ]
+      },
+      {
+        "name": "First Saturday - September 2026",
+        "start_time": "2026-09-05T00:00:00Z",
+        "end_time": "2026-09-05T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "First Saturday medal will be awarded to in-person participants only.",
+          "Register through Fev Games."
+        ]
+      },
+      {
+        "name": "Autumn Equinox 2026",
+        "start_time": "2026-09-10T18:00:00Z",
+        "end_time": "2026-09-29T18:00:00Z",
+        "timing_type": "global",
+        "changes": [
+          "Stay prepared for new directives."
+        ]
+      },
+      {
+        "name": "Second Sunday - September 2026",
+        "start_time": "2026-09-13T00:00:00Z",
+        "end_time": "2026-09-13T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "Complete the Second Sunday Campaign to increase your Second Sunday medal by 1 count.",
+          "Agents can earn progress toward the Second Sunday medal by completing at least one of the Bounties in the Second Sunday Campaign."
+        ]
+      },
+      {
+        "name": "Apollo Anomaly - Singapore & Denver",
+        "start_time": "2026-09-19T00:00:00Z",
+        "end_time": "2026-09-19T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "Join the Anomaly battle in Singapore and Denver, CO, USA.",
+          "Commemorative Apollo Onsite Medal (single-tiered): Earned by participating in any Anomaly battle onsite.",
+          "Apollo Season Medal (3-tiered): Earned based on performance and participation."
+        ]
+      },
+      {
+        "name": "Shard Storm Signals (Q4 2026)",
+        "start_time": "2026-10-17T00:00:00Z",
+        "end_time": "2026-11-21T23:59:59Z",
+        "timing_type": "local",
+        "changes": [
+          "NIA Researchers have detected XM signals indicating Shard Storms on the following Q4 dates: October 17, October 24, and November 21, 2026."
+        ]
+      }
+    ]
+  },
+  {
     "id": "2026-test-event",
     "title": "Operation Delta Live Notification Test",
     "url": "https://ingress.com/news/2026-test-event",
