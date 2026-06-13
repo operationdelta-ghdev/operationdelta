@@ -44,7 +44,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(key, value);
     // Automatically update scheduled notifications
-    await NotificationService().rescheduleAlarms(_articles);
+    try {
+      await NotificationService().rescheduleAlarms(_articles);
+    } catch (e) {
+      debugPrint("Error rescheduling notifications after setting change: $e");
+    }
   }
 
   @override
@@ -89,7 +93,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         });
 
         // Trigger notifications rescheduling
-        await NotificationService().rescheduleAlarms(parsedArticles);
+        try {
+          await NotificationService().rescheduleAlarms(parsedArticles);
+        } catch (e) {
+          debugPrint("Error rescheduling notifications after fetch: $e");
+        }
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

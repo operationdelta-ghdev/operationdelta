@@ -7,16 +7,23 @@ import '../models/event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
+  // Channel constants — must be consistent between channel creation and scheduling
+  static const String _channelId = 'ingress_event_channel';
+  static const String _channelName = 'Ingress Event Alerts';
+  static const String _channelDesc = 'Alerts for Ingress gameplay anomalies and modifiers';
+
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
 
   final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
-  Future<void>? _initFuture;
+  // Tracks whether init has been completed successfully
+  bool _initialized = false;
 
   Future<void> init() async {
-    _initFuture ??= _initImpl();
-    await _initFuture;
+    if (_initialized) return;
+    await _initImpl();
+    _initialized = true;
   }
 
   Future<void> _initImpl() async {
@@ -25,12 +32,13 @@ class NotificationService {
     try {
       final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
       tz.setLocalLocation(tz.getLocation(currentTimeZone));
+      debugPrint('Timezone set to: $currentTimeZone');
     } catch (e) {
-      debugPrint("Warning setting local timezone: $e. Falling back to UTC.");
+      debugPrint('Warning setting local timezone: $e. Falling back to UTC.');
       tz.setLocalLocation(tz.UTC);
     }
 
-    // 2. Initialize Notifications Settings
+    // 2. Initialize Notifications plugin
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('launcher_icon');
 
@@ -48,19 +56,41 @@ class NotificationService {
     await _notificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        debugPrint("Notification clicked: ${details.payload}");
+        debugPrint('Notification tapped: ${details.payload}');
       },
     );
 
-    // Request permissions for Android 13+ and exact alarms permission for Android 12+
-    final androidImplementation = _notificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
-    if (androidImplementation != null) {
-      await androidImplementation.requestNotificationsPermission();
+    // 3. Android-specific setup
+    final androidImpl = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+
+    if (androidImpl != null) {
+      // CRITICAL: Explicitly create the notification channel.
+      // Without this, notifications are silently dropped on Android 8+.
+      const AndroidNotificationChannel channel = AndroidNotificationChannel(
+        _channelId,
+        _channelName,
+        description: _channelDesc,
+        importance: Importance.max,
+        playSound: true,
+        enableVibration: true,
+      );
+      await androidImpl.createNotificationChannel(channel);
+      debugPrint('Notification channel created: $_channelId');
+
+      // Request POST_NOTIFICATIONS permission (Android 13+)
+      final bool? notifGranted = await androidImpl.requestNotificationsPermission();
+      debugPrint('Notification permission granted: $notifGranted');
+      if (notifGranted == false) {
+        debugPrint('WARNING: User denied notification permission. Notifications will not appear.');
+      }
+
+      // Request SCHEDULE_EXACT_ALARM permission (Android 12+)
       try {
-        await androidImplementation.requestExactAlarmsPermission();
+        final bool? exactGranted = await androidImpl.requestExactAlarmsPermission();
+        debugPrint('Exact alarm permission granted: $exactGranted');
       } catch (e) {
-        debugPrint("Error requesting exact alarms permission: $e");
+        debugPrint('Exact alarm permission unavailable (pre-Android 12): $e');
       }
     }
   }
@@ -68,14 +98,16 @@ class NotificationService {
   // Resets and schedules alerts for all active and upcoming events
   Future<void> rescheduleAlarms(List<Article> articles) async {
     // Ensure plugin is initialized before scheduling
-    if (_initFuture != null) {
-      await _initFuture;
-    } else {
-      await init();
-    }
+    if (!_initialized) await init();
+    
     // Cancel all previously scheduled alarms first to prevent duplicates
     await _notificationsPlugin.cancelAll();
-    debugPrint("Cancelled all old notifications. Scheduling fresh alarms...");
+    debugPrint("Cancelled all old notifications. Scheduling fresh alarms for ${articles.length} articles...");
+
+    if (articles.isEmpty) {
+      debugPrint("No articles provided. Alarms cleared.");
+      return;
+    }
 
     // Load preferences
     final prefs = await SharedPreferences.getInstance();
@@ -165,9 +197,9 @@ class NotificationService {
     required String payload,
   }) async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'ingress_event_channel',
-      'Ingress Event Alerts',
-      channelDescription: 'Alerts for Ingress gameplay anomalies and modifiers',
+      _channelId,  // must match the channel created in init()
+      _channelName,
+      channelDescription: _channelDesc,
       importance: Importance.max,
       priority: Priority.high,
       playSound: true,

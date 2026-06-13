@@ -6,16 +6,15 @@ void main() async {
   // Ensure framework is ready for plugins
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const IngressEventApp());
-
-  // Initialize serverless client-side notifications
-  // Done after runApp to ensure the UI is active and not blocked by permission requests
+  // Initialize notification service BEFORE runApp so it is ready
+  // when the dashboard makes its first fetch and rescheduleAlarms() call.
   try {
-    final notificationService = NotificationService();
-    await notificationService.init();
+    await NotificationService().init();
   } catch (e) {
     debugPrint("Notification service initialization failed: $e");
   }
+
+  runApp(const IngressEventApp());
 }
 
 class IngressEventApp extends StatelessWidget {
