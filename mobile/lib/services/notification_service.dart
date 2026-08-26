@@ -8,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
   // Channel constants — must be consistent between channel creation and scheduling
-  static const String _channelId = 'ingress_event_channel';
+  // Channel constants — must be consistent between channel creation and scheduling
+  static const String _channelId = 'ingress_event_channel_v3';
   static const String _channelName = 'Ingress Event Alerts';
   static const String _channelDesc = 'Alerts for Ingress gameplay anomalies and modifiers';
 
@@ -40,10 +41,13 @@ class NotificationService {
       debugPrint('WARNING: User denied notification permission.');
     }
 
-    // USE_EXACT_ALARM is auto-granted at install — just verify it's active
+    // Exact alarms check & request
     try {
       final bool? canExact = await androidImpl.canScheduleExactNotifications();
       debugPrint('Can schedule exact notifications: $canExact');
+      if (canExact == false) {
+        await androidImpl.requestExactAlarmsPermission();
+      }
     } catch (e) {
       debugPrint('canScheduleExactNotifications check failed: $e');
     }
@@ -66,6 +70,7 @@ class NotificationService {
       priority: Priority.high,
       playSound: true,
       enableVibration: true,
+      icon: 'ic_notification',
     );
     const NotificationDetails details = NotificationDetails(
       android: androidDetails,
@@ -96,9 +101,9 @@ class NotificationService {
       tz.setLocalLocation(tz.UTC);
     }
 
-    // 2. Initialize Notifications plugin
+    // 2. Initialize Notifications plugin with drawable resource
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
+        AndroidInitializationSettings('ic_notification');
 
     const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -259,6 +264,7 @@ class NotificationService {
       priority: Priority.high,
       playSound: true,
       enableVibration: true,
+      icon: 'ic_notification',
     );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
